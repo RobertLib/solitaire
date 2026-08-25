@@ -1,0 +1,34 @@
+No account or sign-in is required, and there is nothing to unlock — tap Play and
+the whole game is available on the first launch.
+
+NO GAMBLING OF ANY KIND. Nothing is wagered and nothing pays out. The app has no
+StoreKit code and no networking code, so it cannot transact with anything, and
+there is no way to buy, earn or transfer anything.
+
+The one thing worth explaining is the optional "Vegas" scoring mode, which is a
+scoring convention rather than a gambling mechanic: the deal starts the score at
+-52 and each card played to a foundation adds 5, so a finished deal scores +208.
+No bet is placed, no odds are offered, no balance is topped up and nothing can be
+cashed out — it is a score that happens to be counted in dollars, exactly as the
+original desktop version of the game counted it. The other two scoring modes
+(Standard and none) do not use it at all. The Chance-Based Activities section of
+the age rating questionnaire is therefore answered None, and the Gambling
+declaration in App Information is No.
+
+Fully offline. All content is generated at runtime — the cards are drawn with
+shapes and the sounds are synthesised at launch, so the app ships with no audio
+or image assets and makes no network requests. Settings, statistics and a game in
+progress are stored in UserDefaults on the device (declared in
+solitaire/PrivacyInfo.xcprivacy, reason CA92.1).
+
+How to play: drag a card onto a legal pile, or tap it to send it to the best
+legal spot. Tap the stock to draw. The bottom bar has New Game, Undo, Hint and —
+once the deal can no longer be lost — an auto-finish wand. The menu offers Draw 1
+or Draw 3, the scoring mode, four table felts, four card backs and a left-handed
+layout. Closing the app mid-deal saves it; reopening resumes the same deal with
+its undo history intact.
+
+Localisation: English and Czech, switched by the device language. There is no
+in-app language setting.
+
+The app supports iPhone and iPad in both portrait and landscape.

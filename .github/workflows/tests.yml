@@ -1,0 +1,100 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Both jobs pin macos-26 rather than macos-latest. The project is built with
+# Swift 6.2 defaults — `-default-isolation` on the command line and
+# SWIFT_DEFAULT_ACTOR_ISOLATION in the project — and neither exists before
+# Xcode 26. The macos-15 image still defaults to Xcode 16.4, and macos-latest
+# still points at macos-15, so either of those would fail on the first compiler
+# invocation rather than on anything about the code.
+
+jobs:
+  engine:
+    # The engine suites need a Swift toolchain and nothing else — no project,
+    # no simulator — so they answer in seconds and gate every push.
+    name: Engine suites
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show the toolchain
+        run: swift --version
+      - name: Run the engine suites
+        run: ./Tests/run.sh
+
+  app:
+    # The same suites again, compiled into the app module this time, plus the
+    # cases that need a running app. Slower, and the job that proves the
+    # project itself still builds.
+    name: App tests
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show the toolchain
+        run: xcodebuild -version
+      - name: Pick a simulator
+        # Whichever iPhone the runner's newest iOS runtime offers, rather than
+        # a model name that ages out from under the workflow. The image carries
+        # several runtimes and lists the oldest first, so the newest is chosen
+        # deliberately instead of taking whatever comes first.
+        run: |
+          set -euo pipefail
+          xcrun simctl list devices available
+          device=$(xcrun simctl list devices available --json | python3 -c '
+          import json, sys
+
+          def version(identifier):
+              tail = identifier.rsplit(".", 1)[-1]          # iOS-26-4
+              return tuple(int(p) for p in tail.split("-")[1:] if p.isdigit())
+
+          best = None
+          for identifier, devices in json.load(sys.stdin)["devices"].items():
+              if "SimRuntime.iOS-" not in identifier:
+                  continue
+              phones = [d for d in devices
+                        if d.get("isAvailable") and d["name"].startswith("iPhone")]
+              if not phones:
+                  continue
+              if best is None or version(identifier) > best[0]:
+                  best = (version(identifier), phones[0])
+
+          if best is None:
+              sys.exit("no available iPhone simulator on this runner")
+          print(best[1]["udid"])
+          ')
+          echo "Using simulator $device"
+          echo "device=$device" >> "$GITHUB_ENV"
+      - name: Boot the simulator
+        # `xcodebuild test` would boot it too, but a cold first boot on a
+        # runner can take minutes and time the test run out. Booting it here
+        # keeps that cost in a step that says so when it goes wrong.
+        run: |
+          set -euo pipefail
+          xcrun simctl boot "$device" || true
+          xcrun simctl bootstatus "$device" -b
+      - name: Run the app test target
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project solitaire.xcodeproj \
+            -scheme solitaire \
+            -destination "id=$device" \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Upload the result bundle
+        # Job logs need admin rights on the repository to download; the result
+        # bundle does not, so a red run can be read by whoever sees it.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults.xcresult
+          retention-days: 14

@@ -6,7 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D40A7B0D303E174400BB90D0 /* EngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A7B0C303E174400BB90D0 /* EngineTests.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		D40A7C01303E174400BB90D0 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		D40A7B02303E174400BB90D0 /* solitaireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = solitaireTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D40A7B0C303E174400BB90D0 /* EngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineTests.swift; sourceTree = "<group>"; };
+		D40A7B0F303E174400BB90D0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		D40A7B10303E174400BB90D0 /* run.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = run.sh; sourceTree = "<group>"; };
 		D40A7A22303E174400BB90D0 /* solitaire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = solitaire.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -16,9 +25,21 @@
 			path = solitaire;
 			sourceTree = "<group>";
 		};
+		D40A7B03303E174400BB90D0 /* solitaireTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = solitaireTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D40A7B05303E174400BB90D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D40A7A1F303E174400BB90D0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -32,7 +53,10 @@
 		D40A7A19303E174400BB90D0 = {
 			isa = PBXGroup;
 			children = (
+				D40A7C01303E174400BB90D0 /* Signing.xcconfig */,
 				D40A7A24303E174400BB90D0 /* solitaire */,
+				D40A7B03303E174400BB90D0 /* solitaireTests */,
+				D40A7B0E303E174400BB90D0 /* Tests */,
 				D40A7A23303E174400BB90D0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +65,19 @@
 			isa = PBXGroup;
 			children = (
 				D40A7A22303E174400BB90D0 /* solitaire.app */,
+				D40A7B02303E174400BB90D0 /* solitaireTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D40A7B0E303E174400BB90D0 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D40A7B0C303E174400BB90D0 /* EngineTests.swift */,
+				D40A7B0F303E174400BB90D0 /* main.swift */,
+				D40A7B10303E174400BB90D0 /* run.sh */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -70,7 +105,40 @@
 			productReference = D40A7A22303E174400BB90D0 /* solitaire.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D40A7B01303E174400BB90D0 /* solitaireTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D40A7B07303E174400BB90D0 /* Build configuration list for PBXNativeTarget "solitaireTests" */;
+			buildPhases = (
+				D40A7B04303E174400BB90D0 /* Sources */,
+				D40A7B05303E174400BB90D0 /* Frameworks */,
+				D40A7B06303E174400BB90D0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D40A7B0A303E174400BB90D0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D40A7B03303E174400BB90D0 /* solitaireTests */,
+			);
+			name = solitaireTests;
+			packageProductDependencies = (
+			);
+			productName = solitaireTests;
+			productReference = D40A7B02303E174400BB90D0 /* solitaireTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		D40A7B0B303E174400BB90D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D40A7A1A303E174400BB90D0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D40A7A21303E174400BB90D0;
+			remoteInfo = solitaire;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXProject section */
 		D40A7A1A303E174400BB90D0 /* Project object */ = {
@@ -83,6 +151,10 @@
 					D40A7A21303E174400BB90D0 = {
 						CreatedOnToolsVersion = 26.6;
 					};
+					D40A7B01303E174400BB90D0 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = D40A7A21303E174400BB90D0;
+					};
 				};
 			};
 			buildConfigurationList = D40A7A1D303E174400BB90D0 /* Build configuration list for PBXProject "solitaire" */;
@@ -91,6 +163,7 @@
 			knownRegions = (
 				en,
 				Base,
+				cs,
 			);
 			mainGroup = D40A7A19303E174400BB90D0;
 			minimizedProjectReferenceProxies = 1;
@@ -100,11 +173,27 @@
 			projectRoot = "";
 			targets = (
 				D40A7A21303E174400BB90D0 /* solitaire */,
+				D40A7B01303E174400BB90D0 /* solitaireTests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXTargetDependency section */
+		D40A7B0A303E174400BB90D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D40A7A21303E174400BB90D0 /* solitaire */;
+			targetProxy = D40A7B0B303E174400BB90D0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXResourcesBuildPhase section */
+		D40A7B06303E174400BB90D0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D40A7A20303E174400BB90D0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +204,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D40A7B04303E174400BB90D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D40A7B0D303E174400BB90D0 /* EngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D40A7A1E303E174400BB90D0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -127,6 +224,7 @@
 /* Begin XCBuildConfiguration section */
 		D40A7A2B303E174400BB90D0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D40A7C01303E174400BB90D0 /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -160,7 +258,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = K6GM85X5D7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -178,7 +275,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -191,6 +288,7 @@
 		};
 		D40A7A2C303E174400BB90D0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D40A7C01303E174400BB90D0 /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -224,7 +322,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = K6GM85X5D7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -236,7 +333,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -253,9 +350,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K6GM85X5D7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Solitaire;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -273,7 +371,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -285,9 +383,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K6GM85X5D7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Solitaire;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -305,8 +404,50 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D40A7B08303E174400BB90D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.solitaireTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/solitaire.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/solitaire";
+			};
+			name = Debug;
+		};
+		D40A7B09303E174400BB90D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.solitaireTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/solitaire.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/solitaire";
 			};
 			name = Release;
 		};
@@ -327,6 +468,15 @@
 			buildConfigurations = (
 				D40A7A2E303E174400BB90D0 /* Debug */,
 				D40A7A2F303E174400BB90D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D40A7B07303E174400BB90D0 /* Build configuration list for PBXNativeTarget "solitaireTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D40A7B08303E174400BB90D0 /* Debug */,
+				D40A7B09303E174400BB90D0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

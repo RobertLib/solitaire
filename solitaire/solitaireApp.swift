@@ -2,8 +2,6 @@
 //  solitaireApp.swift
 //  solitaire
 //
-//  Created by Robert Libšanský on 25.08.2026.
-//
 
 import SwiftUI
 

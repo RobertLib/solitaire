@@ -1,0 +1,20 @@
+//
+//  Signing.xcconfig
+//  solitaire
+//
+//  Where the code-signing team comes from.
+//
+//  The team ID is the one setting in this project that belongs to whoever is
+//  building it rather than to the project, so it is not in project.pbxproj:
+//  a clone would otherwise carry someone else's team and have to clear it
+//  before it could sign anything. Drop a `Local.xcconfig` next to this file —
+//  it is git-ignored — with the team to sign with:
+//
+//      DEVELOPMENT_TEAM = ABCDE12345
+//
+//  Nothing here is needed to build for the simulator or to run the tests, and
+//  CI passes CODE_SIGNING_ALLOWED=NO. The include is optional, so a checkout
+//  without that file builds as it always did.
+//
+
+#include? "Local.xcconfig"

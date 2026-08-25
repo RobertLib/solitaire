@@ -1,0 +1,40 @@
+Klondike solitaire, done properly. The scoring you remember from the desktop, Vegas if you prefer it, draw one or draw three — and no ads, no in-app purchases, no account and no internet.
+
+ALL OF THE RULES, NONE OF THE SHORTCUTS
+Seven columns, four foundations, a stock and a waste pile. Move a face-up run as a group, turn the deck over, take a card back off a foundation when you need it. Draw one card at a time or three, with the last three waste cards fanned out so you can see what you are working with.
+
+THREE WAYS TO SCORE
+• Standard — the classic desktop scoring, worked out to the point: +10 to a foundation, +5 for turning a card over, −15 to take one back, −2 every ten seconds, and a time bonus for finishing quickly
+• Vegas — buy the deck for 52, earn 5 a card, a limited number of passes through the stock, and an optional balance that carries from one game to the next
+• None — just the cards and the clock
+
+NEVER STUCK, NEVER GUESSING
+Undo reaches back through the whole game, and it survives closing the app — a deal reopened at a dead end can still be walked back to where it went wrong. Hints cycle through every move worth making, one tap at a time. When a deal genuinely runs out of legal moves the board says so, instead of leaving you to work it out. And once the win is certain, the wand plays the rest of it for you.
+
+PLAY IT HOWEVER YOU LIKE
+• Drag and drop, or tap a card to send it to the best spot
+• The valid drop target lights up while you drag
+• Four table felts: Classic Green, Midnight, Ocean and Wine
+• Four card backs: Crimson, Royal Blue, Emerald and Night Sky
+• A left-handed layout that moves the controls across
+• Portrait and landscape, iPhone and iPad
+• Sounds and haptics, both switchable
+
+IT WAITS FOR YOU
+Close the app in the middle of a deal and it comes back exactly as you left it, undo history and all. Every deal carries a number, so a good one can be replayed from the start — or restarted on the spot when it goes wrong.
+
+STATISTICS THAT ADD UP
+Games played and won, win rate, current and best streak, and your best time, fewest moves and best score — kept separately for draw one and draw three, because they are not the same game and one of them is much easier.
+
+BUILT FOR EVERYONE
+Every pile and every card is labeled for VoiceOver, and each card offers its legal destinations by name — "Move to column 3" — so you pick the pile rather than taking whatever tap-to-move would have chosen. Text follows your Dynamic Type size. Reduce Motion is honored throughout: the deal lands instead of flying in, panels fade instead of growing, and the victory cascade gives way to the results screen on its own.
+
+FAIR PLAY
+• No ads
+• No in-app purchases
+• No account, no sign-in, no data collected
+• Works completely offline — there is no networking code in the app at all
+• English and Czech
+• iPhone and iPad
+
+Just solitaire. Nothing else.

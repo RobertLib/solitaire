@@ -1,0 +1,11 @@
+První vydání.
+
+• Klondike pasiáns, lízání po jedné nebo po třech kartách
+• Standardní bodování, Vegas nebo žádné, s volitelným průběžným zůstatkem Vegas
+• Zpět přes celou hru — a přežije to i restart aplikace
+• Nápověda k tahům, detekce slepé uličky a dohrání jedním ťuknutím
+• Čtyři sukna stolu, čtyři rubové strany karet, rozvržení pro leváky
+• Statistiky vedené zvlášť pro lízání po jedné a po třech
+• Naváže na rozdání, které jsi nechal rozehrané, a každé rozdání jde zahrát znovu podle čísla
+• VoiceOver, dynamická velikost písma a omezení pohybu v celé aplikaci
+• Kompletně offline, bez reklam a bez nákupů

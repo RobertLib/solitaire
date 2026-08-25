@@ -1,0 +1,11 @@
+First release.
+
+• Klondike solitaire, draw one or draw three
+• Standard, Vegas or no scoring, with an optional running Vegas balance
+• Undo across the whole game — and across a relaunch
+• Move hints, dead-end detection and a one-tap auto-finish
+• Four table felts, four card backs, a left-handed layout
+• Statistics kept separately for draw one and draw three
+• Resumes the deal you left open, and every deal can be replayed by number
+• VoiceOver, Dynamic Type and Reduce Motion throughout
+• Fully offline, no ads, no purchases

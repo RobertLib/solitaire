@@ -1,0 +1,40 @@
+Klondike pasiáns, jak má být. Bodování, které si pamatuješ z počítače, Vegas, pokud ho máš radši, lízání po jedné nebo po třech kartách — a žádné reklamy, žádné nákupy v aplikaci, žádný účet a žádný internet.
+
+VŠECHNA PRAVIDLA, ŽÁDNÉ ZKRATKY
+Sedm sloupců, čtyři základny, balíček a odkládací hromádka. Odkryté řady se přesouvají vcelku, balíček jde otočit a kartu ze základny si můžeš vzít zpátky, když ji potřebuješ. Líznout jde po jedné kartě nebo po třech — poslední tři karty na odkládací hromádce se přitom rozloží do vějíře, abys viděl, s čím pracuješ.
+
+TŘI ZPŮSOBY BODOVÁNÍ
+• Standardní — klasické bodování z počítače, dotažené do detailu: +10 za kartu na základnu, +5 za otočení karty, −15 za vzetí karty zpátky, −2 každých deset sekund a časový bonus za rychlé dohrání
+• Vegas — balíček koupíš za 52, každá karta na základně vynese 5, průchodů balíčkem máš omezený počet a zůstatek se ti může přenášet z jedné hry do druhé
+• Žádné — jen karty a hodiny
+
+NIKDY ZASEKNUTÝ, NIKDY NASLEPO
+Zpět se dostaneš přes celou hru — a přežije to i zavření aplikace, takže rozdání, které jsi otevřel ve slepé uličce, se dá vrátit až tam, kde se to zlomilo. Nápověda projde postupně všechny tahy, které stojí za to udělat. A když v rozdání opravdu žádný tah nezbývá, hra to řekne sama, místo aby tě nechala na to přijít. Ve chvíli, kdy je výhra jistá, zbytek za tebe dohraje kouzelná hůlka.
+
+HRAJ, JAK TI TO VYHOVUJE
+• Táhni kartu prstem, nebo na ni ťukni a poletí na nejlepší místo sama
+• Při tažení se platné cílové místo rozsvítí
+• Čtyři sukna stolu: klasická zelená, půlnoční, oceán a vínová
+• Čtyři rubové strany karet: karmínová, královská modř, smaragdová a noční obloha
+• Rozvržení pro leváky, které přesune ovládání na druhou stranu
+• Na výšku i na šířku, iPhone i iPad
+• Zvuky a haptická odezva, obojí se dá vypnout
+
+POČKÁ NA TEBE
+Zavři aplikaci uprostřed rozdání a vrátíš se přesně tam, kde jsi skončil, včetně celé historie tahů zpět. Každé rozdání má své číslo, takže povedené se dá zahrát znovu od začátku — a nepovedené restartovat na místě.
+
+STATISTIKY, KTERÉ DÁVAJÍ SMYSL
+Odehrané a vyhrané hry, úspěšnost, aktuální i nejdelší série a nejlepší čas, nejméně tahů a nejlepší skóre — vedené zvlášť pro lízání po jedné a po třech, protože to nejsou stejné hry a jedna z nich je o dost snazší.
+
+PRO KAŽDÉHO
+Každá hromádka i každá karta má popisek pro VoiceOver a ke každé kartě se nabídnou její možné cíle jmenovitě — „Přesunout do sloupce 3“ — takže si hromádku vybereš sám, místo abys bral tu, kterou by zvolilo ťuknutí. Texty respektují nastavenou velikost písma. Omezení pohybu je respektované všude: rozdání dosedne, místo aby přilétlo, panely se prolnou místo zvětšení a vítězná kaskáda sama uvolní místo výsledkům.
+
+FÉROVÁ HRA
+• Žádné reklamy
+• Žádné nákupy v aplikaci
+• Žádný účet, žádné přihlašování, žádný sběr dat
+• Funguje kompletně offline — aplikace neobsahuje vůbec žádný síťový kód
+• Čeština i angličtina
+• iPhone i iPad
+
+Jen pasiáns. Nic víc.
