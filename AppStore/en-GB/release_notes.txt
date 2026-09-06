@@ -1,11 +1,12 @@
-First release.
+Fixes.
 
-• Klondike solitaire, draw one or draw three
-• Standard, Vegas or no scoring, with an optional running Vegas balance
-• Undo across the whole game — and across a relaunch
-• Move hints, dead-end detection and a one-tap auto-finish
-• Four table felts, four card backs, a left-handed layout
-• Statistics kept separately for draw one and draw three
-• Resumes the deal you left open, and every deal can be replayed by number
-• VoiceOver, Dynamic Type and Reduce Motion throughout
-• Fully offline, no ads, no purchases
+• Tapping bare table no longer deals a card — only the stock itself does
+• The rank in a card’s top corner no longer runs into the pips, or into the border on a Jack, Queen or King — most noticeable on the two-character “10”
+• VoiceOver no longer offers the board behind the results screen: once a deal is won, the results are what a reader gets
+• Resetting the statistics mid-deal no longer leaves the table reporting a game won and none played
+• The menu always opens full height, so the deal number and the rules in force are there without dragging it up
+• The menu rows that act on the game no longer wear a chevron promising a screen that never opens
+• The Draw setting is labelled again — a segmented picker hides its own label, and the note underneath was naming a control that had none
+• The Vegas balance in Statistics now counts the deal on the table, so it matches the figure in the status bar instead of showing a second, different one
+• “Best score” now reads “Best score (Standard)”, so a Vegas player can see why the row is a dash
+• At the largest text sizes the results panel keeps every figure on one line, the dead-end banner wraps its second line instead of cutting it off, and the auto-finish button stays a button rather than growing over the board

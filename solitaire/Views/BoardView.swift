@@ -21,7 +21,13 @@ struct BoardView: View {
     private struct DragInfo {
         var run: [Card]
         var cardIDs: Set<String>
+        /// The card the run is led by — the one the move is made with.
         var leadID: String
+        /// The card whose gesture is driving the drag. Usually the same card,
+        /// but a drag begun on a half-covered waste card leads with the top of
+        /// the pile instead, and the gesture still belongs to the card the
+        /// finger actually landed on.
+        var ownerID: String
         var translation: CGSize = .zero
         var hoverTarget: PileID?
     }
@@ -84,8 +90,12 @@ struct BoardView: View {
                 }
             }
         }
-        .position(m.stockCenter)
+        // Before `position`, not after it. `position` stretches the view over
+        // the whole board, so a content shape applied to the result is a
+        // board-sized hit area rather than a card-sized one — and every tap on
+        // bare felt dealt a card. Sized here, the shape is the placeholder.
         .contentShape(RoundedRectangle(cornerRadius: cs.width * 0.11))
+        .position(m.stockCenter)
         .onTapGesture { vm.tapStock() }
         .accessibilityLabel(L10n.stockPile)
         .accessibilityAddTraits(.isButton)
@@ -106,7 +116,10 @@ struct BoardView: View {
         ForEach(0..<4, id: \.self) { f in
             let highlighted = isPileHighlighted(.foundation(f))
             PilePlaceholder(size: cs, highlighted: highlighted) {
-                Text("A")
+                // Verbatim: the rank glyph on an empty foundation, not a
+                // word. Extracted into the string catalog it is a lone "A"
+                // with no context for a translator to work from.
+                Text(verbatim: "A")
                     .font(.system(size: cs.width * 0.42, weight: .medium, design: .serif))
                     .foregroundStyle(UIStyle.placeholderStroke)
             }
@@ -262,9 +275,7 @@ struct BoardView: View {
     }
 
     private func accessibilityLabel(for card: Card, at location: CardLocation?) -> String {
-        let name = card.isFaceUp
-            ? "\(L10n.rankName(card.rank)) — \(L10n.suitName(card.suit))"
-            : L10n.faceDownCard
+        let name = card.isFaceUp ? L10n.cardName(card) : L10n.faceDownCard
         switch location?.pile {
         case .stock: return L10n.cardInStock(name)
         case .waste: return L10n.cardInWaste(name)
@@ -292,12 +303,18 @@ struct BoardView: View {
             .onChanged { value in
                 if drag == nil {
                     guard !vm.interactionLocked,
-                          let (run, loc) = vm.state.movableRun(startingAt: card.id),
+                          // Not necessarily this card: a grab on a half-covered
+                          // waste card carries the top of the pile, the same
+                          // reading a tap there gets.
+                          let (run, loc) = vm.state.movableRun(startingAt: vm.resolvedCardID(for: card.id)),
                           loc.pile != .stock else { return }
-                    drag = DragInfo(run: run, cardIDs: Set(run.map(\.id)), leadID: card.id)
+                    drag = DragInfo(
+                        run: run, cardIDs: Set(run.map(\.id)),
+                        leadID: run[0].id, ownerID: card.id
+                    )
                     Haptics.tap(enabled: vm.settings.hapticsEnabled)
                 }
-                guard var d = drag, d.leadID == card.id else { return }
+                guard var d = drag, d.ownerID == card.id else { return }
                 d.translation = value.translation
                 d.hoverTarget = resolveTarget(for: d, placements: placements, metrics: m, targets: targets)
                 drag = d
@@ -309,7 +326,7 @@ struct BoardView: View {
                 // run the first finger is still carrying, snapping it home
                 // mid-move. Nothing to reset either way: a gesture that never
                 // became the drag never wrote to it.
-                guard var d = drag, d.leadID == card.id else { return }
+                guard var d = drag, d.ownerID == card.id else { return }
                 d.translation = value.translation
                 let target = resolveTarget(for: d, placements: placements, metrics: m, targets: targets)
 
@@ -373,6 +390,10 @@ struct BoardView: View {
                 : .opacity.combined(with: .move(edge: edge))
             Text(message)
                 .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                // Same ceiling the rest of the chrome keeps: unclamped, the
+                // capsule ran the width of the board at the largest sizes and
+                // covered the cards the message is about.
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 9)

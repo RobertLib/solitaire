@@ -227,13 +227,28 @@ private func readInt32(_ bytes: [UInt8], at index: Int) -> Int {
 struct UndoHistory: Equatable {
     private var bytes: [UInt8] = []
 
+    /// How far back undo reaches. Far past any real game — the cap is there so
+    /// a runaway loop cannot grow the history, and the save file with it,
+    /// without bound.
+    static let maxDepth = 500
+
     init() {}
 
     /// Reads a stored history back, or nil if these are not records of boards
     /// the rules could have produced.
+    ///
+    /// A history deeper than the cap keeps its newest `maxDepth` steps and
+    /// drops the rest, which is exactly what `push` does when a game reaches
+    /// the cap. Nothing this build writes can arrive that deep, but the cap is
+    /// enforced on the way in as well as on the way out so it is a property of
+    /// the type rather than of one caller: a save written by a build with a
+    /// different cap, or by one that had a bug, is brought inside the range
+    /// instead of being carried around at whatever size it happens to be.
     init?(packed data: Data) {
-        let raw = [UInt8](data)
+        var raw = [UInt8](data)
         guard raw.count % UndoStep.packedSize == 0 else { return nil }
+        let excess = raw.count / UndoStep.packedSize - Self.maxDepth
+        if excess > 0 { raw.removeFirst(excess * UndoStep.packedSize) }
         for start in stride(from: 0, to: raw.count, by: UndoStep.packedSize) {
             let record = Array(raw[start ..< start + UndoStep.packedSize])
             guard let step = UndoStep(packedBytes: record), step.isPlayable else { return nil }
@@ -255,7 +270,13 @@ struct UndoHistory: Equatable {
     mutating func popLast() -> UndoStep? {
         guard bytes.count >= UndoStep.packedSize else { return nil }
         let start = bytes.count - UndoStep.packedSize
-        let step = UndoStep(packedBytes: Array(bytes[start...]))
+        // The bytes are given up only once they have read back as a step.
+        // Nothing this type accepts can fail here — `init(packed:)` checks
+        // every record on the way in and `push` writes them itself — but
+        // dropping a step the caller never received is the one way undo could
+        // quietly lose a move rather than refuse one, so the removal waits for
+        // the record to be in hand.
+        guard let step = UndoStep(packedBytes: Array(bytes[start...])) else { return nil }
         bytes.removeLast(UndoStep.packedSize)
         return step
     }

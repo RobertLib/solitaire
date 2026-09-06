@@ -770,6 +770,22 @@ struct EngineTests {
         check(capped.count == 10, "the history stops at its limit")
         check(capped.popLast()?.moves == 39, "and it is the newest steps that are kept")
 
+        // The same cap holds on the way in. Nothing this build writes can be
+        // deeper than `maxDepth`, but a save is bytes from somewhere else, and
+        // reading one that is keeps the newest records exactly as `push` does
+        // rather than carrying the whole thing around.
+        var overlong = UndoHistory()
+        for i in 0..<(UndoHistory.maxDepth + 25) {
+            overlong.push(UndoStep(state: g, points: i, moves: i, recyclesUsed: 0,
+                                   elapsedSeconds: i, movedIDs: []),
+                          limit: UndoHistory.maxDepth + 25)
+        }
+        check(overlong.count == UndoHistory.maxDepth + 25, "a history built past the cap to test it")
+        var trimmed = UndoHistory(packed: overlong.packed)
+        check(trimmed?.count == UndoHistory.maxDepth, "a history read back stops at the cap")
+        check(trimmed?.popLast()?.moves == UndoHistory.maxDepth + 24,
+              "and it is the newest steps that survive the trim")
+
         // Bytes that are not a history are refused rather than read as one.
         check(UndoHistory(packed: Data()) != nil, "no history at all is a history of nothing")
         check(UndoHistory(packed: Data(repeating: 0, count: 5)) == nil, "a part record is not a history")
@@ -904,7 +920,39 @@ struct EngineTests {
                 check(reference >= m.tableauMaxBottom - 0.5 || m.fanDown >= m.fanUp * 0.85 - 0.5,
                       "\(who): the reference column stops \(m.tableauMaxBottom - reference) pt short with the fan not yet at its limit")
 
-                guard !m.isLandscape else { continue }
+                guard !m.isLandscape else {
+                    // Landscape puts the stock and the foundations beside the
+                    // columns rather than above them, so what portrait checks
+                    // vertically has to be checked across the width instead.
+                    let cardW = m.cardSize.width
+                    let columnsLeft = m.tableauTopCenters[0].x - cardW / 2
+                    let columnsRight = m.tableauTopCenters[6].x + cardW / 2
+                    let sidePiles = [("stock", m.stockCenter), ("waste", m.wasteCenter)]
+                        + m.foundationCenters.enumerated().map { ("foundation \($0.offset + 1)", $0.element) }
+                    for (label, centre) in sidePiles {
+                        let clear = centre.x + cardW / 2 <= columnsLeft + 0.5
+                            || centre.x - cardW / 2 >= columnsRight - 0.5
+                        check(clear, "\(who): the \(label) reaches into the columns")
+                        check(centre.y - m.cardSize.height / 2 >= -0.5
+                              && centre.y + m.cardSize.height / 2 <= size.height + 0.5,
+                              "\(who): the \(label) runs off the board")
+                    }
+                    let columnGap = m.tableauTopCenters[1].x - m.tableauTopCenters[0].x - cardW
+                    check(columnGap >= -0.5, "\(who): the columns overlap by \(-columnGap) pt")
+
+                    // A card so large that the reference column has to be
+                    // squeezed tighter than `fanSteps` would ever go on its own
+                    // is a card too large: the board fills up with cards nobody
+                    // can tell apart, the rank in the corner having gone under
+                    // the card above it. Landscape is the only place the card
+                    // is sized by anything but the width, and so the only place
+                    // this can happen.
+                    let reference = m.tableauTopCenters[0].y
+                        + 6 * m.fanUp + 6 * m.fanDownTight + m.cardSize.height / 2
+                    check(reference <= m.tableauMaxBottom + 0.5,
+                          "\(who): the reference column overruns the board by \(reference - m.tableauMaxBottom) pt, so the card is bigger than the fan can carry")
+                    continue
+                }
                 let topRowBottom = m.stockCenter.y + m.cardSize.height / 2
                 let tableauTop = m.tableauTopCenters[0].y - m.cardSize.height / 2
                 check(topRowBottom <= tableauTop + 0.5, "\(who): the top row overlaps the columns")

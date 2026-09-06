@@ -28,9 +28,9 @@ struct TopHUD: View {
 
     var body: some View {
         HStack(spacing: isRoomy ? 12 : 8) {
-            StatBlock(label: vm.scoreLabel, value: vm.displayScore, roomy: isRoomy)
-            StatBlock(label: L10n.time, value: vm.formattedTime, roomy: isRoomy)
-            StatBlock(label: L10n.moves, value: "\(vm.moves)", roomy: isRoomy)
+            StatBlock(label: vm.scoreLabel, value: vm.displayScore, roomy: isRoomy, identifier: "hud.score")
+            StatBlock(label: L10n.time, value: vm.formattedTime, roomy: isRoomy, identifier: "hud.time")
+            StatBlock(label: L10n.moves, value: "\(vm.moves)", roomy: isRoomy, identifier: "hud.moves")
         }
         .frame(maxWidth: BarMetrics.maxWidth(horizontalSizeClass))
         .padding(.horizontal, 12)
@@ -45,6 +45,9 @@ private struct StatBlock: View {
     var label: String
     var value: String
     var roomy: Bool = false
+    /// A name for the block that does not change with the language. Nobody is
+    /// shown it; it is how the UI tests find the figure to read it back.
+    var identifier: String
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -68,6 +71,13 @@ private struct StatBlock: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, roomy ? 8 : 5)
         .background(.black.opacity(0.22), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        // One element rather than two loose labels. VoiceOver read the heading
+        // and the figure as separate stops — "MOVES", then, somewhere after it,
+        // "12" — which is a caption and an orphan rather than a fact.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(value)
+        .accessibilityIdentifier(identifier)
     }
 }
 
@@ -158,6 +168,11 @@ struct AutoFinishButton: View {
             .shadow(color: theme.accent.opacity(0.55), radius: 12, y: 4)
         }
         .buttonStyle(.plain)
+        // Same ceiling the status bar, the control bar and the dead-end banner
+        // keep. Without one the capsule grew to the full width of the board and
+        // three hyphenated lines deep at the largest sizes — sitting on top of
+        // the tableau it is offering to play out.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 }
 
@@ -178,6 +193,13 @@ struct NoMovesBanner: View {
                 Text(canUndo ? L10n.noMovesLeftDetail : L10n.noMovesLeftDetailNoUndo)
                     .font(.footnote)
                     .foregroundStyle(.white.opacity(0.7))
+                    // At the accessibility text sizes the two buttons below want
+                    // more width than the banner has, and this line went out as
+                    // "Take a move back or start a…" — truncated rather than
+                    // wrapped, which is what a Text does when the stack around it
+                    // is squeezed. This asks for the height the wrapped text
+                    // needs and leaves the width to the banner.
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .multilineTextAlignment(.center)
 

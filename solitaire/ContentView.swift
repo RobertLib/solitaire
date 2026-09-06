@@ -74,7 +74,12 @@ struct ContentView: View {
                     // The results panel dims the board, but the control bar
                     // went on showing through it — three buttons that look
                     // available while the panel quietly swallows their taps.
+                    // Swallowing a tap is not hiding a button, though: VoiceOver
+                    // activates one by name rather than by where it is, so the
+                    // bar has to be taken out of the reader's world as well as
+                    // out of sight.
                     .opacity(model.game.isWon ? 0 : 1)
+                    .accessibilityHidden(model.game.isWon)
             }
 
             if model.game.isWon {
@@ -96,7 +101,11 @@ struct ContentView: View {
             case .settings:
                 SettingsView(settings: model.settings)
             case .statistics:
-                StatisticsView(statistics: model.statistics)
+                StatisticsView(
+                    statistics: model.statistics,
+                    vegasBalance: { model.game.vegasBalance },
+                    onReset: { model.game.statisticsWereReset() }
+                )
             case .help:
                 HelpView()
             }

@@ -19,14 +19,14 @@ struct MenuSheet: View {
         NavigationStack {
             List {
                 Section {
-                    MenuRow(icon: "play.fill", tint: .green, title: L10n.resume) {
+                    MenuRow(icon: "play.fill", tint: .green, title: L10n.resume, navigates: false) {
                         dismiss()
                     }
-                    MenuRow(icon: "plus.rectangle.on.rectangle", tint: .blue, title: L10n.newGame) {
+                    MenuRow(icon: "plus.rectangle.on.rectangle", tint: .blue, title: L10n.newGame, navigates: false) {
                         dismiss()
                         vm.newGame()
                     }
-                    MenuRow(icon: "arrow.counterclockwise", tint: .orange, title: L10n.restartDeal) {
+                    MenuRow(icon: "arrow.counterclockwise", tint: .orange, title: L10n.restartDeal, navigates: false) {
                         dismiss()
                         vm.restartDeal()
                     }
@@ -52,7 +52,12 @@ struct MenuSheet: View {
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        // Full height only. At a partial detent iOS gives the sheet a glass
+        // background, and the felt and cards behind it show straight through a
+        // list of buttons — the one sheet in the app that did not look like the
+        // others. Full height also brings the footer, which carries the deal
+        // number and the rules in force, back above the fold.
+        .presentationDetents([.large])
     }
 }
 
@@ -60,9 +65,17 @@ private struct MenuRow: View {
     var icon: String
     var tint: Color
     var title: String
+    /// Whether the row opens another screen. The chevron promises one, so the
+    /// three rows that act on the game and dismiss — resume, deal, restart —
+    /// say no and go without it.
+    var navigates: Bool = true
     var action: () -> Void
 
     var body: some View {
+        // `.plain` so the label keeps the colours set below. Under the
+        // automatic style a button's label resolves `.primary` to the button's
+        // tint, which is the app's gold accent — every row came out gold, and
+        // the `.foregroundStyle` on the title did nothing.
         Button(action: action) {
             HStack(spacing: 14) {
                 Image(systemName: icon)
@@ -74,10 +87,14 @@ private struct MenuRow: View {
                     .font(.body.weight(.medium))
                     .foregroundStyle(.primary)
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.tertiary)
+                if navigates {
+                    Image(systemName: "chevron.right")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                }
             }
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
     }
 }

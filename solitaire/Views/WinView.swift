@@ -42,6 +42,13 @@ struct WinView: View {
             }
         }
         .transition(.opacity)
+        // Everything behind this is dimmed, out of reach and — for the cards —
+        // no longer movable, but none of that is visible to a reader working
+        // by name: without the trait VoiceOver goes on offering all fifty-two
+        // of them. `.contain` is what makes the panel an element the trait can
+        // be hung on in the first place.
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isModal)
     }
 
     @ViewBuilder
@@ -71,6 +78,12 @@ struct WinView: View {
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
         )
         .padding(isShort ? 16 : 30)
+        // The panel is 340 pt across and every row of it is a label, a badge
+        // and a figure side by side, so past this the figure is what gives:
+        // "+2372" came out as "+237" over "2", and a score split across two
+        // lines reads as two scores. Same ceiling the status bar, the control
+        // bar and the dead-end banner keep, and the panel still scrolls.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 
     private var headline: some View {
@@ -168,6 +181,10 @@ struct WinView: View {
             if record {
                 Text(L10n.newRecord)
                     .font(.caption.weight(.bold))
+                    // Wrapping inside the capsule stacked it four deep —
+                    // "Nov / ý re- / kor / d!" — so it stays on one line.
+                    .lineLimit(1)
+                    .layoutPriority(1)
                     .foregroundStyle(.black.opacity(0.8))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
@@ -177,6 +194,10 @@ struct WinView: View {
                 .fontWeight(.bold)
                 .monospacedDigit()
                 .foregroundStyle(.white)
+                // The figure is what the row is for, so it gets the width it
+                // needs and the label wraps instead.
+                .lineLimit(1)
+                .layoutPriority(1)
         }
         .font(.subheadline)
     }

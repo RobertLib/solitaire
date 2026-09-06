@@ -248,6 +248,12 @@ enum Shots {
         if scene.vegasBalance != 0 {
             statistics.addVegasResult(scene.vegasBalance)
         }
+        // The deal above counted itself as started into the table that has
+        // just been cleared, which is the same spot a player who clears the
+        // table mid-deal is in. Without this the wand poses win a game out of
+        // none played — the very figure `statisticsWereReset` exists to keep
+        // straight.
+        game.statisticsWereReset()
 
         if scene.hint {
             keepHintOnScreen(game)

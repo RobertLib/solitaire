@@ -79,11 +79,24 @@ enum BoardLayout {
     /// reference column of six face-down cards under a seven-card run, which
     /// covers 99% of the columns that come up in play; anything deeper still
     /// compresses in `placements`.
+    /// The reference column the fan is budgeted for: six face-down cards under
+    /// a seven-card run, which covers 99% of the columns that come up in play.
+    private static let referenceFaceUpGaps: CGFloat = 6
+    private static let referenceFaceDownGaps: CGFloat = 6
+
+    /// Face-down cards carry nothing to read, so they stay tightly stacked.
+    private static let tightRatio: CGFloat = 0.48
+
+    /// Below this fraction of the card the rank in the corner starts to
+    /// disappear under the card above it, so the fan never goes tighter of its
+    /// own accord — and `landscapeMetrics` will not hand it a card so large
+    /// that it would have to.
+    private static let minUpRatio: CGFloat = 0.28
+
     private static func fanSteps(cardHeight: CGFloat, available: CGFloat) -> (up: CGFloat, down: CGFloat, tight: CGFloat) {
-        let faceUpGaps: CGFloat = 6
-        let faceDownGaps: CGFloat = 6
-        // Face-down cards carry nothing to read, so they stay tightly stacked.
-        let downRatio: CGFloat = 0.48
+        let faceUpGaps = referenceFaceUpGaps
+        let faceDownGaps = referenceFaceDownGaps
+        let downRatio = tightRatio
         let raw = available / (faceUpGaps + faceDownGaps * downRatio)
         // Below ~0.28 the rank in the corner starts to disappear under the card
         // above; the ceiling is what keeps a column reading as one pile rather
@@ -95,7 +108,7 @@ enum BoardLayout {
         // column shows more of every card for it, the deepest included: it
         // compresses a little where before it did not need to, and still comes
         // out fanned wider than the old ceiling allowed.
-        let up = min(max(raw, cardHeight * 0.28), cardHeight * 0.62)
+        let up = min(max(raw, cardHeight * minUpRatio), cardHeight * 0.62)
         let tight = up * downRatio
 
         // Where that ceiling binds — only ever a tall phone — the reference
@@ -170,6 +183,36 @@ enum BoardLayout {
 
     // MARK: - Landscape
 
+    /// The largest card that fits with the foundations laid out `rows` deep and
+    /// `columns` across: the block has to stack inside the height, and the
+    /// seven tableau columns, the stock's one and the foundations' have to sit
+    /// side by side across the width.
+    private static func widthFittingFoundations(
+        rows: Int, columns: Int,
+        size: CGSize, vMargin: CGFloat, spacing: CGFloat, sideMargin: CGFloat
+    ) -> CGFloat {
+        let byHeight = (size.height - 2 * vMargin - CGFloat(rows - 1) * spacing) / CGFloat(rows) / cardAspect
+        let lanes = CGFloat(7 + 1 + columns)
+        let byWidth = (size.width - 2 * sideMargin - 2 * spacing * 4 - 6 * spacing) / lanes
+        return min(byHeight, byWidth)
+    }
+
+    /// The tallest card whose reference column still fans at the face-up step
+    /// `fanSteps` will not go tighter than, in the height on hand.
+    ///
+    /// A card that outgrows the height is a worse deal than a small one: the
+    /// column compresses to stay on the board, and past a point the rank in the
+    /// corner disappears under the card above it — a board of big cards nobody
+    /// can read. `span` is the room from the top of the columns' margin to the
+    /// bottom of the board.
+    private static func cardHeightFittingFan(span: CGFloat) -> CGFloat {
+        let gaps = (referenceFaceUpGaps + referenceFaceDownGaps * tightRatio) * minUpRatio
+        // The column is its own height plus the gaps, and it starts half a card
+        // below the margin and ends half a card above its last centre — which
+        // adds up to one whole card either way.
+        return span / (1 + gaps)
+    }
+
     private static func landscapeMetrics(for size: CGSize, leftHanded: Bool) -> BoardMetrics {
         var m = BoardMetrics()
         m.isLandscape = true
@@ -177,12 +220,33 @@ enum BoardLayout {
         let vMargin: CGFloat = 10
         let spacing = max(5, size.height * 0.016)
         let sideMargin = max(10, size.width * 0.015)
+        m.tableauMaxBottom = size.height - 6
 
-        // Card height limited by the foundations column and overall height;
-        // width limited by side columns + 7 tableau columns.
-        let maxCardHFromColumn = (size.height - 2 * vMargin - 3 * spacing) / 4
-        let maxCardWFromWidth = (size.width - 2 * sideMargin - 2 * spacing * 4 - 6 * spacing) / 9
-        let cardW = clampedCardWidth(min(maxCardHFromColumn / cardAspect, maxCardWFromWidth))
+        // Two ways to park the four foundations beside the tableau: stacked in
+        // one column, or in a 2×2 block. The column is narrow and tall, the
+        // block wide and short, and which of them lets the card come out bigger
+        // is a question about the shape of the board rather than about the
+        // device — so both are measured and the better one wins.
+        //
+        // A landscape iPad is wide enough that the seven columns are what binds
+        // and the tall arrangement takes it, unchanged. A landscape phone is
+        // short, and there the column of four was the only thing holding the
+        // card down — to a little over half the width that was going spare.
+        let stackedWidth = widthFittingFoundations(
+            rows: 4, columns: 1, size: size, vMargin: vMargin, spacing: spacing, sideMargin: sideMargin
+        )
+        let blockWidth = widthFittingFoundations(
+            rows: 2, columns: 2, size: size, vMargin: vMargin, spacing: spacing, sideMargin: sideMargin
+        )
+        let useBlock = blockWidth > stackedWidth
+        let rows = useBlock ? 2 : 4
+        let columns = useBlock ? 2 : 1
+
+        // ...and no bigger than the columns can fan, whichever arrangement won.
+        // Only landscape ever needs this: a portrait card is seven across a
+        // screen and comes out well inside it.
+        let fanWidth = cardHeightFittingFan(span: m.tableauMaxBottom - vMargin) / cardAspect
+        let cardW = clampedCardWidth(min(max(stackedWidth, blockWidth), fanWidth))
         let cardH = cardW * cardAspect
         m.cardSize = CGSize(width: cardW, height: cardH)
 
@@ -191,32 +255,46 @@ enum BoardLayout {
         let leftX = sideMargin + cardW / 2
         let rightX = size.width - sideMargin - cardW / 2
         let stockSideX = leftHanded ? rightX : leftX
-        let foundationX = leftHanded ? leftX : rightX
+        // The foundations take the far side from the stock. `inward` points
+        // from there towards the tableau, so one expression places the block's
+        // second column and the tableau's edge for either handedness.
+        let foundationOuterX = leftHanded ? leftX : rightX
+        let inward: CGFloat = leftHanded ? 1 : -1
+        let foundationInnerX = foundationOuterX + inward * CGFloat(columns - 1) * (cardW + spacing)
 
         m.stockCenter = CGPoint(x: stockSideX, y: vMargin + cardH / 2)
         m.wasteCenter = CGPoint(x: stockSideX, y: vMargin + cardH / 2 + cardH + spacing * 1.5)
         m.wasteFanStep = CGVector(dx: 0, dy: cardH * 0.30)
 
-        // Four foundations fill the height only while the card is sized by
-        // that column; once the width or the cap takes over they fall short,
-        // so the block centres instead of hanging off the top with the tableau
-        // running the full height beside it.
-        let foundationsHeight = 4 * cardH + 3 * spacing
-        let foundationsTop = max(vMargin, (size.height - foundationsHeight) / 2) + cardH / 2
-        m.foundationCenters = (0..<4).map {
-            CGPoint(x: foundationX, y: foundationsTop + CGFloat($0) * (cardH + spacing))
+        // The foundations fill the height only while the card is sized by their
+        // own block; once the width or a cap takes over they fall short, so the
+        // block centres instead of hanging off the top with the tableau running
+        // the full height beside it.
+        let blockHeight = CGFloat(rows) * cardH + CGFloat(rows - 1) * spacing
+        let blockTop = max(vMargin, (size.height - blockHeight) / 2) + cardH / 2
+        // Reading order across the block, so foundation 1 is the leftmost on
+        // screen whichever side of the board the block has been put on. With
+        // one column both entries are the same x and this reduces to the stack.
+        let columnXs = leftHanded
+            ? [foundationOuterX, foundationInnerX]
+            : [foundationInnerX, foundationOuterX]
+        m.foundationCenters = (0..<4).map { i in
+            CGPoint(x: columnXs[i % columns], y: blockTop + CGFloat(i / columns) * (cardH + spacing))
         }
 
-        // Tableau centered between the side columns.
-        let innerLeft = leftX + cardW / 2 + spacing * 3
-        let innerRight = rightX - cardW / 2 - spacing * 3
+        // Tableau centred between the two side blocks, three spacings clear of
+        // each. `inward` points away from the stock, so its edge is the same
+        // expression with the sign turned round.
+        let foundationEdge = foundationInnerX + inward * (cardW / 2 + spacing * 3)
+        let stockEdge = stockSideX - inward * (cardW / 2 + spacing * 3)
+        let innerLeft = min(stockEdge, foundationEdge)
+        let innerRight = max(stockEdge, foundationEdge)
         let tableauSpan = innerRight - innerLeft
         let tableauSpacing = (tableauSpan - 7 * cardW) / 6
         let tableauTopY = vMargin + cardH / 2
         m.tableauTopCenters = (0..<7).map {
             CGPoint(x: innerLeft + cardW / 2 + CGFloat($0) * (cardW + tableauSpacing), y: tableauTopY)
         }
-        m.tableauMaxBottom = size.height - 6
         let fan = fanSteps(cardHeight: cardH, available: max(0, m.tableauMaxBottom - cardH / 2 - tableauTopY))
         m.fanUp = fan.up
         m.fanDown = fan.down

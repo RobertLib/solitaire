@@ -1,18 +1,18 @@
-Klondike pasiáns, jak má být. Bodování, které si pamatuješ z počítače, Vegas, pokud ho máš radši, lízání po jedné nebo po třech kartách — a žádné reklamy, žádné nákupy v aplikaci, žádný účet a žádný internet.
+Pasiáns Klondike, jak má být. Bodování, které si pamatujete z počítače, Vegas, pokud vám sedí víc, lízání po jedné nebo po třech kartách — a žádné reklamy, žádné nákupy v aplikaci, žádný účet a žádný internet.
 
 VŠECHNA PRAVIDLA, ŽÁDNÉ ZKRATKY
-Sedm sloupců, čtyři základny, balíček a odkládací hromádka. Odkryté řady se přesouvají vcelku, balíček jde otočit a kartu ze základny si můžeš vzít zpátky, když ji potřebuješ. Líznout jde po jedné kartě nebo po třech — poslední tři karty na odkládací hromádce se přitom rozloží do vějíře, abys viděl, s čím pracuješ.
+Sedm sloupců, čtyři základny, balíček a odkládací hromádka. Odkryté řady se přesouvají vcelku, balíček jde otočit a kartu ze základny si můžete vzít zpátky, když ji potřebujete. Líznout jde po jedné kartě nebo po třech — poslední tři karty na odkládací hromádce se přitom rozloží do vějíře, abyste viděli, s čím pracujete.
 
 TŘI ZPŮSOBY BODOVÁNÍ
 • Standardní — klasické bodování z počítače, dotažené do detailu: +10 za kartu na základnu, +5 za otočení karty, −15 za vzetí karty zpátky, −2 každých deset sekund a časový bonus za rychlé dohrání
-• Vegas — balíček koupíš za 52, každá karta na základně vynese 5, průchodů balíčkem máš omezený počet a zůstatek se ti může přenášet z jedné hry do druhé
+• Vegas — balíček koupíte za 52, každá karta na základně vynese 5, průchodů balíčkem máte omezený počet a zůstatek se vám může přenášet z jedné hry do druhé
 • Žádné — jen karty a hodiny
 
-NIKDY ZASEKNUTÝ, NIKDY NASLEPO
-Zpět se dostaneš přes celou hru — a přežije to i zavření aplikace, takže rozdání, které jsi otevřel ve slepé uličce, se dá vrátit až tam, kde se to zlomilo. Nápověda projde postupně všechny tahy, které stojí za to udělat. A když v rozdání opravdu žádný tah nezbývá, hra to řekne sama, místo aby tě nechala na to přijít. Ve chvíli, kdy je výhra jistá, zbytek za tebe dohraje kouzelná hůlka.
+NIKDY V KONCÍCH, NIKDY NASLEPO
+Tlačítkem Zpět se vrátíte přes celou hru — a historie tahů přežije i zavření aplikace, takže rozdání, které znovu otevřete ve slepé uličce, se dá vrátit až tam, kde se to zlomilo. Nápověda projde postupně všechny tahy, které stojí za to udělat. A když v rozdání opravdu žádný tah nezbývá, hra to řekne sama, místo aby vás nechala na to přijít. Ve chvíli, kdy je výhra jistá, zbytek za vás dohraje kouzelná hůlka.
 
-HRAJ, JAK TI TO VYHOVUJE
-• Táhni kartu prstem, nebo na ni ťukni a poletí na nejlepší místo sama
+HRAJTE, JAK VÁM TO VYHOVUJE
+• Táhněte kartu prstem, nebo na ni klepněte a poletí na nejlepší místo sama
 • Při tažení se platné cílové místo rozsvítí
 • Čtyři sukna stolu: klasická zelená, půlnoční, oceán a vínová
 • Čtyři rubové strany karet: karmínová, královská modř, smaragdová a noční obloha
@@ -20,14 +20,14 @@ HRAJ, JAK TI TO VYHOVUJE
 • Na výšku i na šířku, iPhone i iPad
 • Zvuky a haptická odezva, obojí se dá vypnout
 
-POČKÁ NA TEBE
-Zavři aplikaci uprostřed rozdání a vrátíš se přesně tam, kde jsi skončil, včetně celé historie tahů zpět. Každé rozdání má své číslo, takže povedené se dá zahrát znovu od začátku — a nepovedené restartovat na místě.
+POČKÁ NA VÁS
+Zavřete aplikaci uprostřed rozdání a vrátíte se přesně tam, kde jste skončili, včetně celé historie tahů. Každé rozdání má své číslo, takže povedené se dá zahrát znovu od začátku — a nepovedené restartovat na místě.
 
 STATISTIKY, KTERÉ DÁVAJÍ SMYSL
-Odehrané a vyhrané hry, úspěšnost, aktuální i nejdelší série a nejlepší čas, nejméně tahů a nejlepší skóre — vedené zvlášť pro lízání po jedné a po třech, protože to nejsou stejné hry a jedna z nich je o dost snazší.
+Odehrané a vyhrané hry, úspěšnost, aktuální i nejlepší série a k tomu nejlepší čas, nejméně tahů a nejlepší skóre — vedené zvlášť pro lízání po jedné a po třech, protože to nejsou stejné hry a jedna z nich je o dost snazší.
 
 PRO KAŽDÉHO
-Každá hromádka i každá karta má popisek pro VoiceOver a ke každé kartě se nabídnou její možné cíle jmenovitě — „Přesunout do sloupce 3“ — takže si hromádku vybereš sám, místo abys bral tu, kterou by zvolilo ťuknutí. Texty respektují nastavenou velikost písma. Omezení pohybu je respektované všude: rozdání dosedne, místo aby přilétlo, panely se prolnou místo zvětšení a vítězná kaskáda sama uvolní místo výsledkům.
+Každá hromádka i každá karta má popisek pro VoiceOver a ke každé kartě se nabídnou její možné cíle jmenovitě — „Přesunout do sloupce 3“ — takže si hromádku vyberete sami, místo abyste brali tu, kterou by zvolilo klepnutí. Texty se řídí nastavenou velikostí písma. Omezení pohybu je respektováno všude: rozdání dosedne, místo aby přilétlo, panely se prolnou místo zvětšení a vítězná kaskáda se vůbec nespustí.
 
 FÉROVÁ HRA
 • Žádné reklamy

@@ -85,14 +85,16 @@ solitaire/
 
 ## Tests
 
-Two harnesses, one set of assertions.
+Three harnesses: two that share one set of assertions, and one that drives a
+real finger.
 
 ```sh
 ./Tests/run.sh     # engine suites, no Xcode, no simulator — about a minute
 ```
 
 ```
-⌘U                 # the same suites plus everything that needs a running app
+⌘U                 # the same suites, everything that needs a running app,
+                   # and the UI tests that tap the board
 ```
 
 `Tests/EngineTests.swift` holds the assertions and is compiled by both: the
@@ -121,10 +123,25 @@ clock, the saved game across a relaunch, the Vegas ledger, statistics
 bookkeeping, and the wand playing a deal out. Each case runs against a scratch
 `UserDefaults` suite, so a test run never touches real preferences.
 
+`solitaireUITests/` covers the one thing neither of the others can see. Both ask
+the model to make a move; neither taps. A pile whose hit area is the wrong size
+is invisible to them — which is how the stock came to answer taps anywhere on
+the table and stayed that way through two releases. SwiftUI makes this a
+correctness matter rather than a matter of taste: `.position` claims all the
+space it is offered, so a `.contentShape` applied after it covers the whole
+board, and every pile is drawn through `.position`. These cases launch the app
+on a fixed board, tap bare felt and expect nothing to happen, tap the stock and
+expect a card, and measure every pile to check it is card-sized rather than
+board-sized. Two of them go at a card rather than a pile — tapping one to send
+it to its foundation, and dragging one onto the card it belongs on — because a
+card is the only thing on the board carrying an `onTapGesture` *and* a
+`DragGesture`, both applied after the `.position` this file exists to watch, and
+neither of the two ways of moving one was reached by a finger before.
+
 Both run on every push and pull request — see
 [`.github/workflows/tests.yml`](.github/workflows/tests.yml). The engine job
 needs only a toolchain and no simulator; the app job builds the project,
-boots a simulator and drives it. Both pin `macos-26`, the only runner image
+boots a simulator and drives it, unit tests and UI tests alike. Both pin `macos-26`, the only runner image
 whose default Xcode is new enough to build this project at all; a failing app
 job uploads its `.xcresult` as an artifact, which anyone can download without
 the admin rights the raw job logs require.

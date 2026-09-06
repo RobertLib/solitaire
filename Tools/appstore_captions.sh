@@ -47,12 +47,12 @@ FONT="${FONT:-/System/Library/Fonts/Supplemental/Arial Bold.ttf}"
 en_caption() {
     case "$1" in
         01-board)      printf 'Klondike, draw one\nor draw three.' ;;
-        02-autofinish) printf 'No ads. No purchases.\nEver.' ;;
+        02-autofinish) printf 'No ads.\nNo purchases.' ;;
         03-stuck)      printf 'It tells you when\na deal is dead.' ;;
-        04-hint)       printf 'Hints, whenever\nyou want one.' ;;
+        04-hint)       printf 'A hint, whenever\nyou want one.' ;;
         05-vegas)      printf 'Standard scoring,\nor Vegas.' ;;
         06-win)        printf 'A time bonus for\nfinishing fast.' ;;
-        07-stats)      printf 'Draw one and draw three,\nscored apart.' ;;
+        07-stats)      printf 'Draw one and draw three,\nscored separately.' ;;
         08-settings)   printf 'Four felts,\nfour card backs.' ;;
     esac
 }
@@ -60,13 +60,13 @@ en_caption() {
 cs_caption() {
     case "$1" in
         01-board)      printf 'Klondike, po jedné\nnebo po třech.' ;;
-        02-autofinish) printf 'Bez reklam. Bez nákupů.\nNikdy.' ;;
-        03-stuck)      printf 'Řekne vám, když\nje rozdání slepé.' ;;
+        02-autofinish) printf 'Bez reklam.\nBez nákupů.' ;;
+        03-stuck)      printf 'Řekne vám, když\ndojdou tahy.' ;;
         04-hint)       printf 'Nápověda, kdykoli\nji budete chtít.' ;;
         05-vegas)      printf 'Standardní bodování,\nnebo Vegas.' ;;
         06-win)        printf 'Časový bonus\nza rychlé dohrání.' ;;
-        07-stats)      printf 'Po jedné a po třech,\nvedené zvlášť.' ;;
-        08-settings)   printf 'Čtyři sukna,\nčtyři rubové strany.' ;;
+        07-stats)      printf 'Po jedné a po třech,\nstatistiky zvlášť.' ;;
+        08-settings)   printf 'Čtyři sukna,\nčtyři ruby karet.' ;;
     esac
 }
 

@@ -39,6 +39,16 @@
                ReferencedContainer = "container:solitaire.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D40A7D06303E174400BB90D0"
+               BuildableName = "solitaireUITests.xctest"
+               BlueprintName = "solitaireUITests"
+               ReferencedContainer = "container:solitaire.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

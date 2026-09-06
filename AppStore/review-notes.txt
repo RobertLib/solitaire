@@ -22,11 +22,13 @@ progress are stored in UserDefaults on the device (declared in
 solitaire/PrivacyInfo.xcprivacy, reason CA92.1).
 
 How to play: drag a card onto a legal pile, or tap it to send it to the best
-legal spot. Tap the stock to draw. The bottom bar has New Game, Undo, Hint and —
-once the deal can no longer be lost — an auto-finish wand. The menu offers Draw 1
-or Draw 3, the scoring mode, four table felts, four card backs and a left-handed
-layout. Closing the app mid-deal saves it; reopening resumes the same deal with
-its undo history intact.
+legal spot. Tap the stock to draw. The bottom bar has Menu, Undo and Hint. New
+Game is inside the Menu, which also opens Settings — Draw 1 or Draw 3, the
+scoring mode, four table felts, four card backs and a left-handed layout. Once
+the deal can no longer be lost, an auto-finish wand appears just above the bar;
+if a deal runs out of legal moves instead, a banner says so and offers Undo and
+New Game. Closing the app mid-deal saves it; reopening resumes the same deal
+with its undo history intact.
 
 Localisation: English and Czech, switched by the device language. There is no
 in-app language setting.

@@ -1,11 +1,12 @@
-První vydání.
+Opravy.
 
-• Klondike pasiáns, lízání po jedné nebo po třech kartách
-• Standardní bodování, Vegas nebo žádné, s volitelným průběžným zůstatkem Vegas
-• Zpět přes celou hru — a přežije to i restart aplikace
-• Nápověda k tahům, detekce slepé uličky a dohrání jedním ťuknutím
-• Čtyři sukna stolu, čtyři rubové strany karet, rozvržení pro leváky
-• Statistiky vedené zvlášť pro lízání po jedné a po třech
-• Naváže na rozdání, které jsi nechal rozehrané, a každé rozdání jde zahrát znovu podle čísla
-• VoiceOver, dynamická velikost písma a omezení pohybu v celé aplikaci
-• Kompletně offline, bez reklam a bez nákupů
+• Klepnutí na prázdný stůl už nelízne kartu — rozdává jen sám zásobník
+• Hodnota v horním rohu karty už nezasahuje do symbolů uprostřed ani do rámečku spodka, dámy a krále — nejvíc to bylo vidět u dvouznakové „10“
+• VoiceOver po výhře už nenabízí desku schovanou za výsledkovým panelem — čtečka dostane rovnou výsledky
+• Vynulování statistik uprostřed rozdání už nenechá tabulku hlásit vyhranou hru z nula odehraných
+• Menu se vždy otevře na celou výšku, takže číslo rozdání i platná pravidla jsou vidět bez vytahování
+• Řádky v menu, které rovnou něco udělají s hrou, už nemají šipku slibující další obrazovku
+• Volba Lízání je zase popsaná — segmentovaný přepínač svůj popisek skrývá a text pod ním tak odkazoval na ovládací prvek, který žádný neměl
+• Zůstatek Vegas ve statistikách teď počítá i rozdání na stole, takže se shoduje s číslem v horní liště místo aby ukazoval druhé, jiné
+• Řádek se jmenuje „Nejlepší skóre (Standardní)“, aby při hře na Vegas bylo jasné, proč je v něm pomlčka
+• Při největších velikostech písma zůstane každé číslo na výsledkovém panelu na jednom řádku, banner „Došly tahy“ druhý řádek zalomí místo aby ho utnul, a tlačítko Dohrát automaticky zůstane tlačítkem místo aby přerostlo přes hrací pole

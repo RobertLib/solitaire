@@ -67,11 +67,6 @@ final class GameViewModel {
     @ObservationIgnored private nonisolated(unsafe) var timerTask: Task<Void, Never>?
     @ObservationIgnored private nonisolated(unsafe) var hintClearTask: Task<Void, Never>?
 
-    /// How far back undo reaches. Far past any real game — the cap is there so
-    /// a runaway loop cannot grow the history, and the save file with it,
-    /// without bound.
-    private static let maxUndoDepth = 500
-
     var canUndo: Bool { !history.isEmpty && !isDealing && !isAutoFinishing && !isWon }
     var interactionLocked: Bool { isDealing || isAutoFinishing || isWon }
 
@@ -115,8 +110,16 @@ final class GameViewModel {
     }
 
     /// Lifetime Vegas balance including this deal, counted only once.
+    ///
+    /// A deal that is not being scored in dollars has none to add. Every caller
+    /// today asks only from inside a `.vegas` branch, so the guard changes no
+    /// answer the game gives — it is there because a standard deal's points
+    /// quietly landing in the lifetime balance is what the next caller would
+    /// otherwise get, and it would show up as a wrong number rather than a
+    /// crash.
     var vegasBalance: Int {
-        statistics.data.vegasBalance + (vegasSettled ? 0 : scoring.points)
+        guard scoring.mode == .vegas else { return statistics.data.vegasBalance }
+        return statistics.data.vegasBalance + (vegasSettled ? 0 : scoring.points)
     }
 
     var formattedTime: String { TimeFormat.clock(elapsedSeconds) }
@@ -264,8 +267,13 @@ final class GameViewModel {
 
     /// Deals from the stock, or turns the waste back over when the stock has
     /// run out. Returns false when the rules allow neither.
+    ///
+    /// `charged` is false only for the wand — see `autoFinish`. It changes
+    /// nothing but whether turning the deck over costs points; the pass still
+    /// counts against the rules' limit either way, so the board the player is
+    /// left with is the same board.
     @discardableResult
-    private func drawOrRecycle() -> Bool {
+    private func drawOrRecycle(charged: Bool = true) -> Bool {
         if !state.stock.isEmpty {
             let drawnIDs = state.stock.suffix(drawCount).map(\.id)
             pushUndo(moving: drawnIDs)
@@ -289,13 +297,31 @@ final class GameViewModel {
             recyclesUsed = min(recyclesUsed + 1, UndoStep.maxRecycles)
             // `recyclesUsed` counts the turns of the deck and the deal is
             // pass 1, so this recycle begins the pass after it.
-            scoring.apply(.recycleWaste(drawCount: drawCount, pass: recyclesUsed + 1))
+            if charged {
+                scoring.apply(.recycleWaste(drawCount: drawCount, pass: recyclesUsed + 1))
+            }
             moves += 1
             SoundManager.play(.shuffle, enabled: settings.soundsEnabled)
             Haptics.tap(enabled: settings.hapticsEnabled)
             return true
         }
         return false
+    }
+
+    /// The card a gesture that landed on `cardID` actually means.
+    ///
+    /// The draw-3 fan leaves the two older waste cards half visible, and a
+    /// finger on one of them is reaching for the pile rather than for that
+    /// card — nothing can be done with the two underneath, so there is nothing
+    /// else it could have meant. Tapping and dragging both come through here,
+    /// which is what keeps them from disagreeing: a drag used to ask the board
+    /// about the card itself, find no movable run, and do nothing at all — not
+    /// even the buzz an illegal move gets — while a tap on the very same pixel
+    /// played the top card.
+    func resolvedCardID(for cardID: String) -> String {
+        guard state.location(of: cardID)?.pile == .waste,
+              let top = state.waste.last else { return cardID }
+        return top.id
     }
 
     /// Tap a card: send it to the best legal spot. Returns false if no move.
@@ -305,17 +331,10 @@ final class GameViewModel {
         clearHint()
 
         var cardID = cardID
-        if let loc = state.location(of: cardID) {
-            if loc.pile == .stock {
-                return tapStock()
-            }
-            // The draw-3 fan leaves the two older waste cards half visible, and
-            // a tap on one of them means the pile rather than that card. Play
-            // the one actually on top instead of buzzing at the player.
-            if loc.pile == .waste, let top = state.waste.last {
-                cardID = top.id
-            }
+        if state.location(of: cardID)?.pile == .stock {
+            return tapStock()
         }
+        cardID = resolvedCardID(for: cardID)
         // Tapping a face-down card is a no-op, not an error.
         if let card = state.card(withID: cardID), !card.isFaceUp {
             return false
@@ -397,9 +416,16 @@ final class GameViewModel {
                     performMove(run: run, from: loc.pile, to: .foundation(foundation), fast: true)
                     try? await Task.sleep(for: .milliseconds(90))
                 case .draw, .recycle:
-                    // Recycling costs the same points here as it would by hand:
-                    // the wand plays the deal out, it does not play it for free.
-                    guard drawOrRecycle() else { steps = limit; break }
+                    // The wand does not pay to turn the deck over. A draw-1
+                    // pass costs 100 points under standard scoring, and the
+                    // wand only ever offers itself on a deal that is already
+                    // decided — the penalty prices a choice about how hard to
+                    // work the deck, and by the time the button appears there
+                    // is no choice left to price. Charged, one tap could take
+                    // a six-hundred-point game to nothing, with nothing on the
+                    // button to say so and no way to find out but to lose the
+                    // points. Drawing has never cost anything either way.
+                    guard drawOrRecycle(charged: false) else { steps = limit; break }
                     saveGame()
                     try? await Task.sleep(for: .milliseconds(70))
                 case nil:
@@ -454,7 +480,7 @@ final class GameViewModel {
                 state: state, points: scoring.points, moves: moves,
                 recyclesUsed: recyclesUsed, elapsedSeconds: elapsedSeconds, movedIDs: movedIDs
             ),
-            limit: Self.maxUndoDepth
+            limit: UndoHistory.maxDepth
         )
     }
 
@@ -480,6 +506,20 @@ final class GameViewModel {
     private func markStarted() {
         guard !hasStarted else { return }
         hasStarted = true
+        statistics.recordGameStarted()
+    }
+
+    /// The statistics table has just been cleared while this deal was already
+    /// under way.
+    ///
+    /// The deal counted itself as played into a table that no longer exists,
+    /// so it counts itself into the new one. Without this, winning the deal on
+    /// the table would add a win to a table reporting no games played at all —
+    /// one game won out of none — and every figure derived from the pair would
+    /// be wrong from then on. The clock and the deal itself are untouched:
+    /// what was cleared is the tally, not the game being played.
+    func statisticsWereReset() {
+        guard hasStarted else { return }
         statistics.recordGameStarted()
     }
 
@@ -645,6 +685,14 @@ final class GameViewModel {
         isDealing = false
         isWon = false
         moves = 12
+        // Set for the same reason the other two scenarios set it, and it was
+        // the one that did not: every counter the HUD shows has to come from
+        // the scenario rather than from whatever game happened to be saved on
+        // the device. Left alone the clock carried over from the restored
+        // save, so the dead-end board photographed at a different time on
+        // every machine — 0:03 on a fresh install, a minute and a half after
+        // a session of play.
+        elapsedSeconds = 95
         recyclesUsed = 0
         hasStarted = true
         scoring = ScoreKeeper(mode: settings.scoringMode)

@@ -90,24 +90,36 @@ struct CardFaceView: View {
                 .padding(.trailing, w * 0.055)
                 .padding(.bottom, w * 0.03)
 
+            // Clear of the corner index rather than under it. The index
+            // column runs from `w * 0.055` to `w * 0.215` — its leading
+            // padding plus its fixed width — and the middle of the card used
+            // to start at `w * 0.20`, inside it: the pips crowded the rank
+            // glyph and the court cards' border ran straight through it. The
+            // horizontal inset is that column's far edge plus a margin, so
+            // every card keeps clear white between the two.
             centerContent
-                .padding(.horizontal, w * 0.20)
+                .padding(.horizontal, w * 0.245)
                 .padding(.vertical, w * 0.24)
         }
         .frame(width: size.width, height: size.height)
         .accessibilityElement()
-        .accessibilityLabel("\(L10n.rankName(card.rank)) — \(L10n.suitName(card.suit))")
+        .accessibilityLabel(L10n.cardName(card))
     }
 
     private var cornerIndex: some View {
+        // The column is a fixed width so the two-glyph "10" stays inside the
+        // corner instead of running into the pips.
         VStack(spacing: -w * 0.02) {
             Text(card.rank.label)
                 .font(.system(size: w * 0.21, weight: .bold, design: .rounded))
+                .fontWidth(.condensed)
             Text(card.suit.symbol)
                 .font(.system(size: w * 0.17))
         }
-        .foregroundStyle(suitColor)
+        .lineLimit(1)
         .minimumScaleFactor(0.5)
+        .frame(width: w * 0.16)
+        .foregroundStyle(suitColor)
     }
 
     @ViewBuilder
@@ -275,7 +287,9 @@ struct CardBackView: View {
                         .strokeBorder(tint.opacity(0.5 - Double(i) * 0.12), lineWidth: 0.8)
                         .padding(CGFloat(i) * w * 0.075 + w * 0.03)
                 }
-                Text("♛")
+                // Verbatim: part of the drawn pattern, like the pips and
+                // the lattice around it, rather than text.
+                Text(verbatim: "♛")
                     .font(.system(size: w * 0.30))
                     .foregroundStyle(tint.opacity(0.65))
             }

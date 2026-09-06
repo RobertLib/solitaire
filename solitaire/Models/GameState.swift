@@ -328,6 +328,12 @@ struct GameState: Codable, Equatable {
 
     /// Is there anything left to do? Taking a card back off a foundation is
     /// deliberately not counted — it undoes progress rather than making any.
+    ///
+    /// `allowRecycle` means a recycle is available *now* — the rules still
+    /// permit a pass and there is a waste to turn over — not merely that the
+    /// rules permit one. `GameViewModel.canRecycle` is the answer both callers
+    /// pass, and `MoveAdvisor.candidates` reads the flag the same way, which is
+    /// what keeps the dead-end banner and the hint list from disagreeing.
     func hasLegalMove(allowRecycle: Bool) -> Bool {
         if !stock.isEmpty || allowRecycle { return true }
 

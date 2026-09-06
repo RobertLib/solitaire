@@ -14,11 +14,22 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker(L10n.draw, selection: $settings.drawCount) {
-                        Text(L10n.drawOne).tag(1)
-                        Text(L10n.drawThree).tag(3)
+                    // The label above the control rather than beside it. A
+                    // segmented picker hides its own, and the footer below
+                    // names this setting by name — "Draw and scoring apply to
+                    // the next deal." — so without one the footer named a
+                    // control that was never labelled; in Czech the segments
+                    // ("Po 1 kartě") do not carry the word either. Beside it
+                    // the two segments would be squeezed instead.
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(L10n.draw)
+                        Picker(L10n.draw, selection: $settings.drawCount) {
+                            Text(L10n.drawOne).tag(1)
+                            Text(L10n.drawThree).tag(3)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
                     }
-                    .pickerStyle(.segmented)
 
                     Picker(L10n.scoring, selection: $settings.scoringMode) {
                         ForEach(ScoringMode.allCases, id: \.self) { mode in

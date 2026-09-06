@@ -4,7 +4,7 @@ ALL OF THE RULES, NONE OF THE SHORTCUTS
 Seven columns, four foundations, a stock and a waste pile. Move a face-up run as a group, turn the deck over, take a card back off a foundation when you need it. Draw one card at a time or three, with the last three waste cards fanned out so you can see what you are working with.
 
 THREE WAYS TO SCORE
-• Standard — the classic desktop scoring, worked out to the point: +10 to a foundation, +5 for turning a card over, −15 to take one back, −2 every ten seconds, and a time bonus for finishing quickly
+• Standard — the classic desktop scoring, worked out in full: +10 to a foundation, +5 for turning a card over, −15 to take one back, −2 every ten seconds, and a time bonus for finishing quickly
 • Vegas — buy the deck for 52, earn 5 a card, a limited number of passes through the stock, and an optional balance that carries from one game to the next
 • None — just the cards and the clock
 
@@ -27,7 +27,7 @@ STATISTICS THAT ADD UP
 Games played and won, win rate, current and best streak, and your best time, fewest moves and best score — kept separately for draw one and draw three, because they are not the same game and one of them is much easier.
 
 BUILT FOR EVERYONE
-Every pile and every card is labeled for VoiceOver, and each card offers its legal destinations by name — "Move to column 3" — so you pick the pile rather than taking whatever tap-to-move would have chosen. Text follows your Dynamic Type size. Reduce Motion is honored throughout: the deal lands instead of flying in, panels fade instead of growing, and the victory cascade gives way to the results screen on its own.
+Every pile and every card is labeled for VoiceOver, and each card offers its legal destinations by name — “Move to column 3” — so you pick the pile rather than taking whatever tap-to-move would have chosen. Text follows your Dynamic Type size. Reduce Motion is honored throughout: the deal lands instead of flying in, panels fade instead of growing, and the victory cascade is skipped entirely.
 
 FAIR PLAY
 • No ads

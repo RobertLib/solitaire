@@ -42,7 +42,7 @@ MobilityWare — the biggest app in the category — sells a *separate paid app*
 whose entire subtitle is "Play Solitaire with NO ads!". There is a visible
 cluster of small apps whose names are nothing but that promise. Every large
 competitor above monetises with ads or purchases. That is why the promise is in
-the subtitle in all three languages, in the caption on the last screenshot, and
+the subtitle in all three languages, in the caption on the second screenshot, and
 in the first paragraph of the description. It is a conversion lever as much as a
 keyword.
 
@@ -222,9 +222,9 @@ No ads. No purchases. No account. No internet.
 **CZ**
 
 ```
-Klondike pasiáns, jak má být. Sedm sloupců, čtyři základny, lízání po jedné nebo po třech kartách a bodování, které si pamatuješ z počítače — standardní, Vegas, nebo žádné.
+Pasiáns Klondike, jak má být. Sedm sloupců, čtyři základny, lízání po jedné nebo po třech kartách a bodování, které si pamatujete z počítače — standardní, Vegas, nebo žádné.
 
-Zpět se dostaneš přes celou hru a přežije to i zavření aplikace. Nápověda projde všechny tahy, které stojí za to udělat. Když v rozdání opravdu žádný tah nezbývá, hra to řekne sama, místo aby tě nechala na to přijít. Jakmile je výhra jistá, zbytek dohraje jedno ťuknutí.
+Tlačítkem Zpět se vrátíte přes celou hru a historie tahů přežije i zavření aplikace. Nápověda projde všechny tahy, které stojí za to udělat. Když v rozdání opravdu žádný tah nezbývá, hra to řekne sama, místo aby vás nechala na to přijít. Jakmile je výhra jistá, zbytek dohraje jedno klepnutí.
 
 Čtyři sukna, čtyři rubové strany karet, rozvržení pro leváky a plná podpora VoiceOveru, dynamické velikosti písma i omezení pohybu. Statistiky vedené zvlášť pro lízání po jedné a po třech, protože jedno z nich je o dost snazší.
 

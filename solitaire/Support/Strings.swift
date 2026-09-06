@@ -68,7 +68,10 @@ enum L10n {
     static let scoringVegas = String(localized: "Vegas")
     static let vegasCumulative = String(localized: "Cumulative Vegas balance")
     static let vegasCumulativeFooter = String(localized: "Your Vegas winnings carry over between games.")
-    static let appliesNextDeal = String(localized: "Changes apply to the next deal.")
+    // Names the two settings it is true of. The cumulative-Vegas switch
+    // sits in the same section and takes effect on the deal already on the
+    // table, so a blanket "changes apply to the next deal" was wrong about it.
+    static let appliesNextDeal = String(localized: "Draw and scoring apply to the next deal.")
     static let leftHandMode = String(localized: "Left-handed layout")
     static let appearance = String(localized: "Appearance")
     static let tableTheme = String(localized: "Table")
@@ -97,7 +100,10 @@ enum L10n {
     static let bestStreak = String(localized: "Best streak")
     static let bestTime = String(localized: "Best time")
     static let fewestMoves = String(localized: "Fewest moves")
-    static let bestScore = String(localized: "Best score")
+    // Names the mode: only standard scoring produces a figure here, so a bare
+    // "Best score" was a row showing a permanent dash to anyone playing Vegas.
+    // The word in brackets is the one the Scoring picker uses for the mode.
+    static let bestScore = String(localized: "Best score (Standard)")
     static let vegasBalance = String(localized: "Vegas balance")
     static let resetStats = String(localized: "Reset Statistics")
     static let resetStatsConfirm = String(localized: "This permanently clears all statistics.")
@@ -143,6 +149,14 @@ enum L10n {
     // every legal destination is offered by name instead.
     static let moveToFoundation = String(localized: "Move to a foundation")
     static func moveToColumn(_ n: Int) -> String { String(localized: "Move to column \(n)") }
+
+    /// A card said out loud. Localised as one phrase, so the order of the two
+    /// halves and the dash between them belong to the translator — the board
+    /// and the card face both read it from here rather than each spelling out
+    /// a separator of its own.
+    static func cardName(_ card: Card) -> String {
+        String(localized: "\(rankName(card.rank)) — \(suitName(card.suit))")
+    }
 
     static func rankName(_ rank: Rank) -> String {
         switch rank {

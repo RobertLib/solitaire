@@ -46,8 +46,13 @@ final class GameViewModelTests: XCTestCase {
     /// `newGame` on top would deal twice — and under Vegas the throwaway deal
     /// would bank a buy-in before the test had done anything.
     private func makeGame(seed: UInt64 = 4242) -> GameViewModel {
+        makeGame(holding: GameState.deal(seed: seed), seed: seed)
+    }
+
+    /// The same, for a board built by hand rather than dealt.
+    private func makeGame(holding state: GameState, seed: UInt64 = 4242) -> GameViewModel {
         let deal = SavedGame(
-            state: GameState.deal(seed: seed), seed: seed, drawCount: settings.drawCount,
+            state: state, seed: seed, drawCount: settings.drawCount,
             scoring: ScoreKeeper(mode: settings.scoringMode), moves: 0, elapsedSeconds: 0,
             recyclesUsed: 0, hasStarted: false, vegasSettled: false, history: Data()
         )
@@ -308,6 +313,38 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(statistics.data.gamesPlayed, 1, "reopening the app is not a new game")
     }
 
+    /// Clearing the table under a deal already in progress. That deal counted
+    /// itself into the table that was just thrown away, so it counts itself
+    /// into the new one — otherwise winning it would file a win against a
+    /// table reporting no games played at all.
+    func testClearingTheTableUnderALiveDealKeepsItCounted() {
+        let vm = makeGame()
+        XCTAssertTrue(playOneMove(vm))
+        XCTAssertEqual(statistics.data.gamesPlayed, 1)
+
+        statistics.reset()
+        vm.statisticsWereReset()
+
+        XCTAssertEqual(statistics.data.gamesPlayed, 1,
+                       "the deal still on the table counts into the fresh tally")
+        XCTAssertEqual(statistics.data.gamesWon, 0)
+
+        // The deal goes on being the same deal: playing on does not count it
+        // a second time, and abandoning it does not either.
+        XCTAssertTrue(playOneMove(vm))
+        XCTAssertEqual(statistics.data.gamesPlayed, 1)
+        vm.newGame(animated: false)
+        XCTAssertEqual(statistics.data.gamesPlayed, 1)
+    }
+
+    func testClearingTheTableBetweenDealsCountsNothing() {
+        let vm = makeGame()
+        statistics.reset()
+        vm.statisticsWereReset()
+        XCTAssertEqual(statistics.data.gamesPlayed, 0,
+                       "a deal nobody has touched has nothing to count into the new table")
+    }
+
     func testARecordIsFiledUnderTheRulesItWasSetUnder() async throws {
         settings.drawCount = 3
         let vm = makeGame()
@@ -360,6 +397,58 @@ final class GameViewModelTests: XCTestCase {
         let single = makeGame()
         single.loadAutoFinishThroughStockScenario()
         XCTAssertTrue(single.canAutoFinish)
+    }
+
+    /// A board the wand cannot finish without turning the deck over.
+    ///
+    /// The waste holds the ten and the jack of diamonds with the jack on top,
+    /// so the card that unblocks the pile is sitting underneath the one that is
+    /// blocked — the one shape no amount of drawing can undo, and the reason
+    /// the wand has a recycle step at all. Everything else is arranged so the
+    /// wand banks a hundred points on the hearts and clubs *before* it gets
+    /// there: under standard scoring a recycle costs a hundred and the score
+    /// floors at zero, so a deal with less than that on it would come out the
+    /// same either way and prove nothing.
+    private func boardNeedingARecycle() -> GameState {
+        func run(_ cards: [(Suit, Rank)]) -> [Card] {
+            cards.map { Card(suit: $0.0, rank: $0.1, isFaceUp: true) }
+        }
+        func foundation(_ suit: Suit, upTo rank: Rank) -> [Card] {
+            (1...rank.rawValue).map { Card(suit: suit, rank: Rank(rawValue: $0)!, isFaceUp: true) }
+        }
+        var s = GameState()
+        // foundations[i] is not tied to a suit; the order here is only the one
+        // `Suit.allCases` happens to give.
+        s.foundations[0] = foundation(.spades, upTo: .king)
+        s.foundations[1] = foundation(.hearts, upTo: .eight)
+        s.foundations[2] = foundation(.diamonds, upTo: .nine)
+        s.foundations[3] = foundation(.clubs, upTo: .eight)
+        s.waste = run([(.diamonds, .ten), (.diamonds, .jack)])
+        // Two runs that hand each other the next rank all the way up: playing
+        // the nine of hearts frees the nine of clubs, which frees the ten of
+        // clubs, and so on to both kings.
+        s.tableaus[0] = run([(.hearts, .king), (.clubs, .queen), (.hearts, .jack), (.clubs, .ten), (.hearts, .nine)])
+        s.tableaus[1] = run([(.clubs, .king), (.hearts, .queen), (.clubs, .jack), (.hearts, .ten), (.clubs, .nine)])
+        // Both blocked behind the jack of diamonds until the deck is turned.
+        s.tableaus[2] = run([(.diamonds, .king)])
+        s.tableaus[3] = run([(.diamonds, .queen)])
+        return s
+    }
+
+    func testTheWandDoesNotChargeForTurningTheDeckOver() async throws {
+        let board = boardNeedingARecycle()
+        XCTAssertTrue(board.isConsistent, "the fixture has to be a board the rules could produce")
+        let vm = makeGame(holding: board)
+        XCTAssertTrue(vm.canAutoFinish)
+
+        vm.autoFinish()
+        try await waitUntil("the wand turns the deck over and finishes") { vm.isWon }
+
+        XCTAssertEqual(vm.recyclesUsed, 1, "the pass still counts against the rules")
+        // Fourteen cards reach a foundation at ten points each. The recycle in
+        // the middle of them used to cost a hundred, which the floor at zero
+        // turned into every point banked so far.
+        XCTAssertEqual(vm.scoring.points, 140)
     }
 
     func testTheWandPlaysTheDealOutThroughTheStock() async throws {
@@ -441,6 +530,28 @@ final class GameViewModelTests: XCTestCase {
     }
 
     // MARK: - Hints
+
+    func testAGrabOnAHalfCoveredWasteCardMeansTheTopOfThePile() {
+        settings.drawCount = 3
+        let vm = makeGame()
+        vm.tapStock()
+        XCTAssertEqual(vm.state.waste.count, 3, "draw 3 puts three cards on the waste")
+
+        let top = try! XCTUnwrap(vm.state.waste.last)
+        // The two older cards of the fan are half visible and nothing can be
+        // done with them, so a finger on either means the pile. Tapping has
+        // always read it that way; dragging asked about the card itself, found
+        // no movable run, and did nothing at all.
+        for covered in vm.state.waste.dropLast() {
+            XCTAssertEqual(vm.resolvedCardID(for: covered.id), top.id)
+            XCTAssertNil(vm.state.movableRun(startingAt: covered.id), "…which is why it has to be remapped")
+        }
+        XCTAssertEqual(vm.resolvedCardID(for: top.id), top.id)
+
+        // Everywhere else the card grabbed is the card carried.
+        let onATableau = try! XCTUnwrap(vm.state.tableaus.first(where: { !$0.isEmpty })?.last)
+        XCTAssertEqual(vm.resolvedCardID(for: onATableau.id), onATableau.id)
+    }
 
     func testAskingAgainOffersADifferentSuggestion() {
         let vm = makeGame()
